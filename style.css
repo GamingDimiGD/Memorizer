@@ -1,0 +1,344 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100;200;300;400;500;600;700;800;900&family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
+
+:root {
+    color-scheme: light dark;
+    --main: #003c00;
+    --accent: light-dark(#00ff00, #005c00);
+    --b1: light-dark(rgba(235, 206, 255, 1), rgba(71, 0, 120, 1));
+    --b2: light-dark(rgba(255, 187, 187, 1), rgba(195, 103, 103, 1));
+    --b3: light-dark(rgba(255, 211, 149, 1), rgba(205, 128, 20, 1));
+    --panel: light-dark(#ffffff, #111111);
+    --sidebar: light-dark(#eeeeee, #222222);
+    --text: light-dark(#000000, #ffffff);
+    --text2: light-dark(#ffffff, #000000);
+    --button-text: #ffffff;
+    --t: #003c003c;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Noto Sans TC', sans-serif;
+    transition: background 0.2s ease-in-out;
+    transition: all 0.2s ease;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--b1);
+    background: linear-gradient(120deg, var(--b1) 0%, var(--b2) 50%, var(--b3) 100%);
+}
+
+.container {
+    width: 90%;
+    height: 90%;
+    margin: 0 auto;
+    padding: 20px 25px;
+    background-color: var(--panel);
+    border-radius: 20px;
+    display: flex;
+    position: relative;
+}
+
+.menu {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 70%;
+    height: 100%;
+    padding: 20px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: scroll;
+}
+
+.menu.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+button {
+    margin: 3px;
+    padding: 2px 7px;
+    font-size: 1rem;
+    border: none;
+    background: var(--main);
+    border-radius: 4px;
+    font-weight: 700;
+    color: var(--button-text);
+    cursor: pointer;
+}
+
+
+button:hover {
+    background: var(--accent);
+    color: var(--button-text);
+}
+
+button[disabled] {
+    background: var(--t);
+    cursor: not-allowed;
+}
+
+.button[disabled].hover {
+    background: var(--t);
+}
+
+.sidebar button[data-selected="true"] {
+    background-color: var(--accent);
+}
+
+.sidebar {
+    height: 100%;
+    width: 30%;
+    min-width: 150px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 20px;
+    background: var(--sidebar);
+    z-index: 2;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.sidebar button {
+    width: 100%;
+    border: var(--accent) 3px solid;
+}
+
+.open-sb {
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+
+.menu.fullpanel {
+    width: 100%;
+}
+
+@media (max-width: 550px) {
+    .menu {
+        width: 100%;
+    }
+    .sidebar {
+        position: absolute;
+        left: 150%;
+        top: 0;
+        opacity: 0;
+        pointer-events: none;
+        width: 100%;
+        min-width: 2rem;
+        transition: all 0.3s ease;
+    }
+
+    .sidebar.show {
+        opacity: 1;
+        left: 0;
+        pointer-events: auto;
+        width: 100%;
+    }
+
+    .dynamic-panel .content {
+        width: 100%;
+    }
+
+    .open-sb {
+        opacity: 1;
+        pointer-events: auto;
+        z-index: 4;
+    }
+}
+
+/* ts stolen from ui and it happens to be stolen from HWT
+im stealing code from myself lmao*/
+/* alertModal (stolen from HWT) */
+
+.modal {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    z-index: 999;
+    pointer-events: none;
+    align-items: center;
+    justify-content: center;
+    background: #000000a0;
+    transition: opacity 0.5s ease;
+    display: flex;
+    flex-direction: column;
+    writing-mode: horizontal-tb;
+}
+
+.modal .content {
+    background: var(--sidebar);
+    color: var(--text);
+    max-width: 230px;
+    margin: 5px;
+    width: 100%;
+    text-align: center;
+    border-radius: 10px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    pointer-events: none;
+}
+
+.modal.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal.show .content {
+    pointer-events: auto;
+}
+
+.modal .content button {
+    padding: 2px 7px;
+}
+
+/* alertModal ends */
+
+.question, .question-preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: var(--t);
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px;
+}
+
+textarea {
+    resize: vertical;
+    font-size: 0.81rem;
+    width: 80%;
+}
+
+input {
+    width: 80%;
+}
+
+.view-questions {
+    width: 100%;
+}
+
+.question-preview {
+    flex-direction: column;
+}
+
+.notif {
+    position: fixed;
+    bottom: 10px;
+    text-align: center;
+    background: var(--main);
+    color: var(--button-text);
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 1rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+    display: flex;
+    align-items: center;
+    -webkit-box-shadow: 2px 2px 15px 3px rgba(0, 0, 0, 0.7);
+    -moz-box-shadow: 2px 2px 15px 3px rgba(0, 0, 0, 0.7);
+    box-shadow: 2px 2px 15px 3px rgba(0, 0, 0, 0.7);
+    border: var(--accent) 3Fpx solid;
+    max-width: 90%;
+    overflow-wrap: break-word;
+    z-index: 9999;
+}
+
+.memorizations {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 10px;
+    width: 90%;
+}
+
+.mem {
+    background: var(--t);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.memorizer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.answer-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: var(--t);
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px;
+}
+
+.version-history {
+    margin: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: calc(100% - 20px);
+    height: 100%;
+    background: var(--t);
+    border-radius: 5px;
+}
+
+.version-history h2 {
+    padding: 5px;
+    margin-bottom: 3px;
+    background: var(--t);
+    width: 100%;
+    border-radius: 3px;
+    text-align: center;
+}
+
+.about-stuff img {
+    animation: rotateY 5s linear infinite;
+}
+
+@keyframes rotateY {
+    0% {
+        transform: rotateY(0deg);
+    }
+    100% {
+        transform: rotateY(360deg);
+    }
+}

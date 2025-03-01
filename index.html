@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- cdn -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+        integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jStorage/0.4.12/jstorage.js"
+        integrity="sha512-/xG2u1+39ezvrTHLgDuWJ07cIOJdBgYxOQ8s/2DkeRWInLMfe4aLBe/5Zd8ECpY/uBKsdY+i1xOEGG4a6RnXHA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tsparticles/confetti@3.0.3/tsparticles.confetti.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/fbd704794c.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"
+        integrity="sha512-vc58qvvBdrDR4etbxMdlTt4GBQk1qjvyORR2nrsPsFPyrs+/u5c3+1Ct6upOgdZoIl7eq6k3a1UPDSNAQi/32A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.20.0/matter.min.js"
+        integrity="sha512-6+7rTBmR6pRFe9fa0vCFjFaHZj/XYa7774bEBzRtxgdpIJOS++R3cKd6Prg/eJmxtsJotd8KAg4g57uuVQsZKA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Faker/3.1.0/faker.min.js"
+        integrity="sha512-/seDHxVfh1NvFUscAj8GsHQVZJvr2jjAoYsNL7As2FCaFHUHYIarl3sRCvVlFgyouVNiRgHIebyLKjpgd1SLDw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/disable-devtool@0.3.8/disable-devtool.min.js" crossorigin="anonymous"
+        referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lunar-javascript/1.6.13/lunar.js"
+        integrity="sha512-tSk1UdQG0t01yvUCHGmD8Z58eax0WpQWfZ+m7FcabU9U44ENCU/n/J3QaqCUZwNtjhiaf09djhGrrZDZtCP0XQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+    <link rel="stylesheet" href="style.css">
+    <script src="scripts/functions.js" defer></script>
+    <script src="scripts/index.js" defer></script>
+
+    <title>背書神器</title>
+</head>
+
+<body>
+    <div class="notif">
+        嗨
+    </div>
+    <div class="container">
+        <div class="home menu show">
+            <h1>首頁</h1>
+            <p>警告: 這個是給學生自主學習的工具，不是老師出題給學生寫的平台，因為學生在寫之前可以直接看到答案。</p>
+            <div class="memorizations">
+            </div>
+            <button class="create-memorization-button" onclick="alertModal(
+                '請問你要怎麼新增?',
+                [
+                    {
+                        text: '自己製作',
+                        onclick: () => {
+                            openMenu('create-memorization')
+                            $('.create-memorization.menu h1').text('新增背書檔')
+                            $('.finish').off('click')
+                            $('.finish').on('click', () => finish())
+                            $('.memorization-questions').empty()
+                            toggleShowSidebar(false)
+                        }
+                    },
+                    {
+                        text: '上傳檔案',
+                        onclick: uploadMem
+                    },
+                    '取消'
+                ]
+            )">
+                <i class="fa-solid fa-plus"></i> 新增背書檔
+            </button>
+        </div>
+        <div class="settings menu">
+            <h1>設定</h1>
+            <button class="change-mode" onclick="toggleMode()">切換顏色模式: 自動</button>
+            <button class="confetti" onclick="toggleConfetti()">彩帶: 開</button>
+        </div>
+        <div class="about menu">
+            <h1>關於</h1>
+            <h3>
+                開發者: 遊戲迪米
+            </h3>
+            <p>
+                你如果有玩過我的遊戲，可能會發現:
+            </p>
+            <p>
+                「UI怎麼跟瘋狂掛機長的那麼像?」
+            </p>
+            <p>
+                那是因為我喜歡這個UI設計，而且懶得設計新UI
+            </p>
+            <p>
+                如果要玩我的遊戲可以到<a target="_blank"
+                    href="https://gamingdimigd.github.io/DimiGameCenter/">迪米遊戲中心</a>來找我的遊戲!
+            </p>
+            <div class="about-stuff">
+                <img src="./GD Logos with hands/IMG_0823.PNG" alt="GD spinning" data-hover-text="欸押韻欸">
+            </div>
+        </div>
+        <div class="update-info menu">
+            <h1>更新資訊</h1>
+            <h2 class="version"></h2>
+            <div class="version-history">
+
+            </div>
+        </div>
+        <div class="create-memorization menu">
+            <h1>新增背書檔</h1>
+            <label for="memorization-name">背書檔名稱:</label><input type="text" id="memorization-name"
+                placeholder="背書真的很討厭">
+            <div class="memorization-questions">
+            </div>
+
+            <div style="text-align: center;">
+                <button class="add-question-button" onclick="addQuestion()">
+                    <i class="fa-solid fa-plus"></i> 新增問題
+                </button><br>
+                <button class="cancel" onclick="
+                alertModal('確定離開? 問題不會儲存!', [
+                    {
+                        text: '是',
+                        onclick: () => {
+                            openMenu('home')
+                            toggleShowSidebar(true)
+                        }
+                    },
+                    '否'
+                ])
+                ">
+                    <i class="fa-solid fa-xmark"></i> 離開
+                </button>
+                <button class="finish" onclick="finish()">
+                    <i class="fa-solid fa-check"></i> 完成
+                </button>
+            </div>
+        </div>
+        <div class="view-memorization menu">
+            <h1>預覽背書檔</h1>
+            <div class="view-questions">
+
+            </div>
+            <button class="back"></button>
+        </div>
+        <div class="memorizing menu">
+            <h1>背起來!</h1>
+            <button class="back"></button>
+            <button class="ready">
+                <h3>
+                    <i class="fa-solid fa-check"></i>我背完了，開始測驗!
+                </h3>
+            </button>
+            <div class="view-questions">
+
+            </div>
+        </div>
+        <div class="memorizer menu">
+            <h1>測驗 - </h1>
+            !! 一旦到下一題就不能回去了 !!
+            按Enter鍵換行，Ctrl + Enter到下一題
+            <h3 class="question-count">0/0</h3>
+            <div class="answer-card">
+                <h2 id="que"></h2>
+                <label for="ans">你的答案: </label>
+                <textarea id="ans" placeholder="究竟會不會全對?"></textarea>
+                <button class="next-question">
+                    下一題 <i class="fa-solid fa-angles-right"></i>
+                </button>
+            </div>
+        </div>
+        <div class="memorizer-results menu">
+            <h1>測驗結果</h1>
+            <h2>成績: 69%</h2>
+            <h3 class="time-passed">經過時間: 00:00.69</h3>
+            <div class="view-questions">
+
+            </div>
+            <button class="back"></button>
+        </div>
+        <button class="open-sb" onclick="toggleSidebar()">
+            <i class="fa-solid fa-list"></i>
+        </button>
+        <div class="sidebar">
+            <button id="home" data-selected="true">首頁</button>
+            <button id="settings">設定</button>
+            <button id="about">關於</button>
+            <button id="update-info">更新資訊</button>
+        </div>
+    </div>
+</body>
+
+</html>

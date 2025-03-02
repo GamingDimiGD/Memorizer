@@ -39,6 +39,8 @@ const shuffle = ([...array]) => {
 }
 
 const identicalRate = (string1, string2) => {
+    string1 = string1.toString();
+    string2 = string2.toString();
     string1 = string1.trim();
     string2 = string2.trim();
     const length = Math.max(string1.length, string2.length)

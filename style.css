@@ -121,6 +121,7 @@ button[disabled] {
 }
 
 .sidebar button {
+    margin: 0;
     width: 100%;
     border: var(--accent) 3px solid;
 }
@@ -274,7 +275,7 @@ input {
     z-index: 9999;
 }
 
-.memorizations {
+.memorizations, .template-list {
     display: flex;
     flex-wrap: wrap;
     align-items: center;

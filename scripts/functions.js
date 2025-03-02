@@ -16,17 +16,17 @@ const save = (save) => {
 
 const compareObj = (object1, object2, deep = false) => {
     if (deep) return JSON.stringify(object1) === JSON.stringify(object2)
-    
+
     let keys1 = Object.keys(object1)
     let keys2 = Object.keys(object2)
-    
+
     if (keys1.length !== keys2.length) return false
-    
+
     for (let key of keys1) {
         if (!keys2.includes(key)) return false
         if (object1[key] !== object2[key]) return false
     }
-    
+
     return true
 }
 
@@ -41,8 +41,8 @@ const shuffle = ([...array]) => {
 const identicalRate = (string1, string2) => {
     string1 = string1.toString();
     string2 = string2.toString();
-    string1 = string1.trim();
-    string2 = string2.trim();
+    string1 = string1.trim().toLowerCase();
+    string2 = string2.trim().toLowerCase();
     const length = Math.max(string1.length, string2.length)
     let sameCount = 0
     for (let i = 0; i < length; i++) {
@@ -245,22 +245,24 @@ const uploadMem = () => {
     let input = document.createElement('input');
     input.type = 'file';
     input.accept = '.json';
+    input.multiple = true;
     input.onchange = () => {
-        let file = input.files[0];
-        let reader = new FileReader();
-        reader.onload = () => {
-            let json = JSON.parse(reader.result),
-                originalName = json.name,
-                i = 0;
-            while (saveFile.memorizations.find(mem => mem.name === json.name)) {
-                i++;
-                json.name = originalName + `(${i})`
+        $.each(input.files, (i, file) => {
+            let reader = new FileReader();
+            reader.onload = () => {
+                let json = JSON.parse(reader.result),
+                    originalName = json.name,
+                    i = 0;
+                while (saveFile.memorizations.find(mem => mem.name === json.name)) {
+                    i++;
+                    json.name = originalName + `(${i})`
+                }
+                saveFile.memorizations.push(json);
+                reloadMemorizations();
+                input.remove();
             }
-            saveFile.memorizations.push(json);
-            reloadMemorizations();
-            input.remove();
-        }
-        reader.readAsText(file);
+            reader.readAsText(file);
+        })
     }
     input.click();
 }
@@ -298,7 +300,7 @@ const reloadMemorizations = () => {
     $.each(saveFile.memorizations, (i, m) => {
         let memorizationHTML = $(`
                 <div class="mem">
-                    <h3>${m.name}</h3>
+                    <h3></h3>
                     <b>題目數量: ${m.questions.length}</b><br>
                     <button class="remove">
                         <i class="fa-solid fa-trash"></i>
@@ -318,6 +320,7 @@ const reloadMemorizations = () => {
                 </div>
         `)
         $('.memorizations').append(memorizationHTML)
+        memorizationHTML.find('h3').text(m.name)
         memorizationHTML.find('.remove').click(() => removeMemorization(m.name))
         memorizationHTML.find('.edit').click(() => editMemorization(m))
         memorizationHTML.find('.preview').click(() => {
@@ -404,7 +407,7 @@ const startMemorization = (name) => {
         questions = shuffle(mem.questions),
         userAnswers = questions.map(question => ({ question: question }))
     $('.memorizer h1').text('測驗 - ' + name)
-    
+
     const next = () => {
         $('#ans').focus()
         currentQuestionIndex++
@@ -463,4 +466,58 @@ const startMemorization = (name) => {
         })
     }
     next()
+}
+
+const loadTemplates = () => {
+    $('.template-list').text('載入中...')
+    const url = 'https://gamingdimigd.github.io/Memorizer-Templates/'
+    $.ajax(url + 'h.json').done(data => {
+        $('.template-list').empty()
+        data.forEach(t => {
+            $.ajax(url + 'templates/' + t + '.json').done(data => {
+                let templateHTML = $(`
+                <div class="mem">
+                    <h3></h3>
+                    <b>題目數量: ${data.questions.length}</b><br>
+                    <button class="preview">
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
+                    <button class="download">
+                        <i class="fa-solid fa-download"></i>
+                    </button>
+                    <button class="add-template">
+                        <i class="fa-solid fa-plus"></i> 加入
+                    </button>
+                </div>
+                </div>`)
+                templateHTML.find('h3').text(data.name)
+                $('.template-list').append(templateHTML)
+                templateHTML.find('.preview').click(() => {
+                    openMenu('view-memorization')
+                    $('.view-memorization .view-questions').empty()
+                    data.questions.forEach(question => {
+                        $('.view-memorization .view-questions').append(`
+                        <div class="question-preview">
+                            <h3 class="question-content">Q: ${question.question}</h3>
+                            <b class="answer-content">A: ${question.answer}</b>
+                        </div>`)
+                    })
+                })
+                templateHTML.find('.download').click(() => downloadMem(m.name))
+                templateHTML.find('.add-template').click(() => {
+                    let saved = { ...data }
+                    let originalName = data.name
+                    let i = 0
+                    while (saveFile.memorizations.find(mem => mem.name === saved.name)) {
+                        i++;
+                        saved.name = originalName + `(${i})`
+                    }
+                    saveFile.memorizations.push(saved)
+                    reloadMemorizations()
+                    $('#home')[0].click()
+                    showNotif('已加入背書檔!')
+                })
+            })
+        })
+    })
 }

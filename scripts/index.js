@@ -21,6 +21,8 @@ $.each($('.sidebar button'), (i, e) => {
     }
 })
 
+$('#templates').on('click', loadTemplates)
+
 document.addEventListener('keydown', (event) => {
     if (event.ctrlKey && event.key === 'Enter') {
         event.preventDefault();
@@ -41,7 +43,7 @@ setInterval(() => save(saveFile), 1000)
 
 reloadMemorizations()
 
-const version = 'v1.0.0'
+const version = 'v1.1.0'
 
 const updateInfo = [
     {
@@ -55,6 +57,20 @@ const updateInfo = [
             {
                 title: '有點不贊成背書，但...',
                 text: '人生一定有些是要背的，像九九乘法表，但我到現在還是不懂的事情是: 為什麼要背注釋!!!'
+            }
+        ]
+    },
+    {
+        version: 'v1.1.0',
+        title: '新增背書檔資料庫!',
+        description: [
+            {
+                title: '新增資料庫!',
+                text: '不一定要自己製作背書檔!'
+            },
+            {
+                title: '修復顯示bug',
+                text: '修復令人不舒服的側欄按鈕偏移問題。'
             }
         ]
     }

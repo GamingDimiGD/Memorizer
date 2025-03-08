@@ -73,6 +73,16 @@ const updateInfo = [
                 text: '修復令人不舒服的側欄按鈕偏移問題。'
             }
         ]
+    },
+    {
+        version: 'v1.1.1',
+        title: 'bug修復',
+        description: [
+            {
+                title: '修復計算相似度的演算法',
+                text: '讓他不那麼嚴格'
+            }
+        ]
     }
 ].reverse();
 

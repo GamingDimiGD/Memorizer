@@ -38,17 +38,39 @@ const shuffle = ([...array]) => {
     return array;
 }
 
+const compareArray = (a, b, deep = false) => {
+    if (!deep) {
+        a.sort()
+        b.sort()
+    }
+    if (a.length !== b.length) return false
+    for (let i = 0; i < a.length; i++) {
+        if (a[i] !== b[i]) return false
+    }
+    return true
+}
+
+
 const identicalRate = (string1, string2) => {
-    string1 = string1.toString();
-    string2 = string2.toString();
-    string1 = string1.trim().toLowerCase();
-    string2 = string2.trim().toLowerCase();
+    string1 = string1.toString().trim().toLowerCase();
+    string2 = string2.toString().trim().toLowerCase();
+    if (string1 === string2) return '100.00'
     const length = Math.max(string1.length, string2.length)
     let sameCount = 0
     for (let i = 0; i < length; i++) {
-        if (string1[i] === string2[i]) sameCount++
+        if (string1.includes(string2[i])) sameCount++
     }
-    return ((sameCount / length) * 100).toFixed(2)
+    let sameCount2 = 0;
+    if (compareArray(string1.split('').sort(), string1.split('').sort()))
+        for (let i = 0; i < length; i++) {
+            if (string1[i] === string2[i]) sameCount2++
+        }
+    else sameCount2 = sameCount
+    return (((sameCount / length) * 0.6 + (string1.length > string2.length ?
+        string2.length / string1.length : string1.length / string2.length
+    ) * 0.2 + (sameCount2 / length) * 0.2
+    ) / 0.03
+    ).toFixed(2)
 }
 
 const avrage = ([...array]) => {

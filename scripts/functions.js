@@ -266,7 +266,7 @@ const downloadMem = (name) => {
 const uploadMem = () => {
     let input = document.createElement('input');
     input.type = 'file';
-    input.accept = '.json';
+    input.accept = '.json, .txt';
     input.multiple = true;
     input.onchange = () => {
         $.each(input.files, (i, file) => {
